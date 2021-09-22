@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Authenticate</ion-title>
+    <ion-title>{{isLogin? 'Login' : 'Signup'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -22,7 +22,7 @@
           </ion-item>
           <ion-item>
             <ion-label position="floating">Password</ion-label>
-            <ion-input type="password" ngModel name="password" required minLength="6" #passwordCtrl="ngModel"></ion-input>
+            <ion-input type="password" ngModel name="password" required minlength="6" #passwordCtrl="ngModel"></ion-input>
           </ion-item>
         
         <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched" lines="none">
@@ -38,8 +38,8 @@
         <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!f.valid">
           Login
         </ion-button>
-        <ion-button type="button" color="primary" fill="clear" expand="full" >
-          Sign Up
+        <ion-button type="button" color="primary" fill="clear" expand="full" (click)="onSwitchAuthMode()" >
+          Switch to {{isLogin? 'Signup': 'Login'}}
         </ion-button>
         
       </ion-col>
