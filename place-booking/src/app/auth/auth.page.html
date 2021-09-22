@@ -1,11 +1,38 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Authenticate</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-button color="primary" (click)="onLogin()">
-    Login
-  </ion-button>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <ion-grid>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        <ion-list>
+          <ion-item>
+            <ion-label position="floating">Email ID</ion-label>
+            <ion-input type="email" ngModel name="email" required email></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Password</ion-label>
+            <ion-input type="password" ngModel name="password" required minLength="5"></ion-input>
+          </ion-item>
+          </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size-md="6" offset-md="3">
+        
+        <ion-button color="primary" type="button" (click)="onLogin()" expand="block">
+           Login
+        </ion-button>
+
+        <ion-button color="primary" type="submit" fill="clear" expand="full">Switch to SignUP</ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+  
+</form>
 </ion-content>
