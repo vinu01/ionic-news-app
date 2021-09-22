@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import {NgForm} from '@angular/forms';
 
 import { AuthService } from './auth.service';
 
@@ -12,27 +12,26 @@ import { AuthService } from './auth.service';
 })
 export class AuthPage implements OnInit {
   isLoading=false;
-  constructor(private authService: AuthService, private router: Router, private loadingCtrl:LoadingController) {}
+  constructor(private authService: AuthService, private router: Router,private loadingCtrl:LoadingController) {}
 
   ngOnInit() {}
 
   onLogin() {
     this.isLoading=true;
     this.authService.login();
-    this.loadingCtrl.create({keyboardClose: true,message:'Logging in'}).then(loadingEl =>{
+    this.loadingCtrl.create({keyboardClose:true, message:'Logging in...'}).then(loadingEl =>{
       loadingEl.present();
 
-      
-    setTimeout(()=>{
-      this.isLoading=false;
-      loadingEl.dismiss();
-      this.router.navigateByUrl('/places/tabs/discover');
-    },1500);
+      setTimeout(()=>{
+        this.isLoading=false;
+        loadingEl.dismiss();
+        this.router.navigateByUrl('/places/tabs/discover');
+      },1500);
     });
-      
+
   }
 
   onSubmit(form: NgForm){
-      console.log(form);
+    console.log(form);
   }
 }

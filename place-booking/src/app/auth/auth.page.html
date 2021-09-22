@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title>Authenticate</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -8,31 +8,44 @@
   <form #f="ngForm" (ngSubmit)="onSubmit(f)">
   <ion-grid>
     <ion-row>
-      <ion-col size-md="6" offset-md="3">
+      <ion-col size-md="12" offset-md="3">
         <ion-list>
           <ion-item>
-            <ion-label position="floating">Email ID</ion-label>
-            <ion-input type="email" ngModel name="email" required email></ion-input>
+            <ion-label position="floating">E-Mail Address</ion-label>
+            <ion-input type="email" ngModel name="email" required email #emailCtrl="ngModel"></ion-input>
+           
+          </ion-item>
+          <ion-item *ngIf="!emailCtrl.valid && emailCtrl.touched" lines="none">
+            <p>
+              Should be enter valid email address!!
+            </p>
           </ion-item>
           <ion-item>
             <ion-label position="floating">Password</ion-label>
-            <ion-input type="password" ngModel name="password" required minLength="5"></ion-input>
+            <ion-input type="password" ngModel name="password" required minLength="6" #passwordCtrl="ngModel"></ion-input>
           </ion-item>
-          </ion-list>
+        
+        <ion-item *ngIf="!passwordCtrl.valid && passwordCtrl.touched" lines="none">
+          <p>
+            Enter Valid password
+          </p>
+        </ion-item>
+        </ion-list>
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col size-md="6" offset-md="3">
-        
-        <ion-button color="primary" type="button" (click)="onLogin()" expand="block">
-           Login
+      <ion-col>
+        <ion-button type="submit" color="primary" (click)="onLogin()" expand="block" [disabled]="!f.valid">
+          Login
         </ion-button>
-
-        <ion-button color="primary" type="submit" fill="clear" expand="full">Switch to SignUP</ion-button>
+        <ion-button type="button" color="primary" fill="clear" expand="full" >
+          Sign Up
+        </ion-button>
+        
       </ion-col>
     </ion-row>
-
   </ion-grid>
   
+
 </form>
 </ion-content>
