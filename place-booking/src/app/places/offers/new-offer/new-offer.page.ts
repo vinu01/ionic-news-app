@@ -35,17 +35,19 @@ export class NewOfferPage implements OnInit {
       dateTo: new FormControl(null,{
         updateOn:'blur',
         validators:[Validators.required]
-      }),
+      })
 
     });
   }
 
   onCreateOffer(){
     if(!this.form.valid){
+      console.log("If form not valid!!");
       return;
     }
 
-    this.placeService.addPlace(this.form.value.title,
+    this.placeService.addPlace(
+      this.form.value.title,
       this.form.value.description,
       +this.form.value.price,
       new Date(this.form.value.dateFrom),
