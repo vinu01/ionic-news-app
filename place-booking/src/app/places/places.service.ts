@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { take, map, tap, delay } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
 
@@ -59,14 +59,16 @@ export class PlacesService {
   }
 
   addPlace(title: string, description: string, price: number,dateFrom: Date, dateTo:Date){
-  console.log("in");
+  
     const newPlace= new Place(
       Math.random().toString(),title,description,'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Paris_Night.jpg/1024px-Paris_Night.jpg',
       price,dateFrom,dateTo,this.authService.userId
     );
-    this.places.pipe(take(1)).subscribe(places => {
-      this._places.next(places.concat(newPlace));
-    });
-      console.log("Pushed");
+    return this.places.pipe(take(1), delay(1000), tap(places=>{
+      
+        this._places.next(places.concat(newPlace));
+     
+    }));
+      
   }
 }

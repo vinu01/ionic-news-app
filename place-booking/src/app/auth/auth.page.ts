@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
   styleUrls: ['./auth.page.scss']
 })
 export class AuthPage implements OnInit {
-  isLoading=true;
+  isLoading=false;
   isLogin=true;
 
 

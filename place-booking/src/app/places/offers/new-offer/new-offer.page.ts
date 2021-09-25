@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
+
+
 import { PlacesService } from '../../places.service';
 
 @Component({
@@ -12,7 +15,7 @@ export class NewOfferPage implements OnInit {
 
   form: FormGroup;
 
-  constructor(private placeService: PlacesService, private router: Router) { }
+  constructor(private placeService: PlacesService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
     this.form=new FormGroup({
@@ -45,16 +48,25 @@ export class NewOfferPage implements OnInit {
       console.log("If form not valid!!");
       return;
     }
+    this.loadingCtrl.create({
+      message: 'Çreate Places.....'
+    }).then(loadingEl =>{
+      loadingEl.present();
+      this.placeService.addPlace(
+        this.form.value.title,
+        this.form.value.description,
+        +this.form.value.price,
+        new Date(this.form.value.dateFrom),
+        new Date(this.form.value.dateTo)
+        )
+        .subscribe(() =>{
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/places/tabs/offers']);
+  
+        });
+    } );
 
-    this.placeService.addPlace(
-      this.form.value.title,
-      this.form.value.description,
-      +this.form.value.price,
-      new Date(this.form.value.dateFrom),
-      new Date(this.form.value.dateTo)
-      );
-      this.form.reset();
-      this.router.navigate(['/places/tabs/offers']);
     console.log(this.form);
     console.log('Creating Offer pages...');
   }
