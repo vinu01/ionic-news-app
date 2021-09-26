@@ -64,11 +64,31 @@ export class PlacesService {
       Math.random().toString(),title,description,'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Paris_Night.jpg/1024px-Paris_Night.jpg',
       price,dateFrom,dateTo,this.authService.userId
     );
-    return this.places.pipe(take(1), delay(1000), tap(places=>{
+    return this.places.pipe(
+      take(1),
+      delay(1000),
+      tap(places=>{
       
         this._places.next(places.concat(newPlace));
      
-    }));
+    })
+    );
       
+  }
+
+  onUpdate(placeId: string, title: string, description: string){
+
+    return this.places.pipe(
+      take(1),
+      delay(1000),
+      tap(places =>{
+        const updatePlaceIndex=places.findIndex(pl => pl.id === placeId);
+        const updatedPlaces=[...places];
+        const oldPlace=updatedPlaces[updatePlaceIndex];
+        updatedPlaces[updatePlaceIndex]=new Place(oldPlace.id, oldPlace.title,oldPlace.description,oldPlace.imageUrl,oldPlace.price,oldPlace.availableFrom,oldPlace.availableTo,oldPlace.userId);
+        this._places.next(updatedPlaces);
+      })
+    );
+
   }
 }
