@@ -85,7 +85,7 @@ export class PlacesService {
         const updatePlaceIndex=places.findIndex(pl => pl.id === placeId);
         const updatedPlaces=[...places];
         const oldPlace=updatedPlaces[updatePlaceIndex];
-        updatedPlaces[updatePlaceIndex]=new Place(oldPlace.id, oldPlace.title,oldPlace.description,oldPlace.imageUrl,oldPlace.price,oldPlace.availableFrom,oldPlace.availableTo,oldPlace.userId);
+        updatedPlaces[updatePlaceIndex]=new Place(oldPlace.id, title,description,oldPlace.imageUrl,oldPlace.price,oldPlace.availableFrom,oldPlace.availableTo,oldPlace.userId);
         this._places.next(updatedPlaces);
       })
     );
