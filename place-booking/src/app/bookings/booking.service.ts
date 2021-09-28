@@ -48,8 +48,14 @@ export class BookingService {
 
       }
 
-    cancelBooking()
+    cancelBooking(bookingId: string)
     {
+      return this.bookings.pipe(take(1),delay(1000),tap(booking=>{
+      
+        this._bookings.next(booking.filter(b => b.id !== bookingId));
+     
+        })
+      );
 
     }
 
