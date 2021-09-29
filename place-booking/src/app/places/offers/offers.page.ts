@@ -22,6 +22,10 @@ export class OffersPage implements OnInit,OnDestroy {
       this.offers = places;
     });
   }
+
+  ionViewWillEnter(){
+    this.placesService.fetchPlace().subscribe();
+  }
   onEdit(offerId: string, slidingItem: IonItemSliding) {
     slidingItem.close();
     this.router.navigate(['/', 'places', 'tabs', 'offers', 'edit', offerId]);
