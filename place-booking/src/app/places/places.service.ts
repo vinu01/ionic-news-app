@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
+import { localizedString } from '@angular/compiler/src/output/output_ast';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { take, map, tap, delay, switchMap } from 'rxjs/operators';
 
 import { AuthService } from '../auth/auth.service';
@@ -96,12 +97,29 @@ export class PlacesService {
     );
   }
   getPlace(id: string) {
-    return this.places.pipe(
-      take(1),
-      map(places => {
-        return { ...places.find(p => p.id === id) };
+
+    return this.http.get<PlaceData>(`https://place-booking-d37a0-default-rtdb.firebaseio.com/offerd-places/${id}.json`)
+    .pipe(
+      map(placeData =>
+      {
+        return new  Place(id,
+          placeData.title,
+          placeData.description,
+          placeData.imageUrl,
+          placeData.price,
+          new Date(placeData.availableFrom),
+          new Date(placeData.availableTo),
+          placeData.userId
+          );
       })
-    );
+      );
+
+    // return this.places.pipe(
+    //   take(1),
+    //   map(places => {
+    //     return { ...places.find(p => p.id === id) };
+    //   })
+    // );
   }
 
   addPlace(title: string, description: string, price: number,dateFrom: Date, dateTo:Date){
@@ -151,23 +169,34 @@ export class PlacesService {
     return this.places.pipe(
       take(1),
       switchMap(places => {
-        const updatedPlaceIndex = places.findIndex(pl => pl.id === placeId);
-        updatedPlaces = [...places];
-        const oldPlace = updatedPlaces[updatedPlaceIndex];
-        updatedPlaces[updatedPlaceIndex] = new Place(
-          oldPlace.id,
-          title,
-          description,
-          oldPlace.imageUrl,
-          oldPlace.price,
-          oldPlace.availableFrom,
-          oldPlace.availableTo,
-          oldPlace.userId
-        );
-        return this.http.put(
-          `https://place-booking-d37a0-default-rtdb.firebaseio.com/offerd-places/${placeId}.json`,
-          { ...updatedPlaces[updatedPlaceIndex], id: null }
-        );
+
+        if(!places || places.length<=0){
+          return this.fetchPlace();
+        }
+        else{
+          return of(places);
+        }
+      }),
+        switchMap(places =>{
+          const updatedPlaceIndex = places.findIndex(pl => pl.id === placeId);
+          updatedPlaces = [...places];
+          const oldPlace = updatedPlaces[updatedPlaceIndex];
+          updatedPlaces[updatedPlaceIndex] = new Place(
+            oldPlace.id,
+            title,
+            description,
+            oldPlace.imageUrl,
+            oldPlace.price,
+            oldPlace.availableFrom,
+            oldPlace.availableTo,
+            oldPlace.userId
+          );
+          return this.http.put(
+            `https://place-booking-d37a0-default-rtdb.firebaseio.com/offerd-places/${placeId}.json`,
+            { ...updatedPlaces[updatedPlaceIndex], id: null }
+          );
+        
+        
       }),
       tap(() => {
         this._places.next(updatedPlaces);

@@ -1,6 +1,6 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoadingController, NavController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { FormGroup,FormControl,Validators } from '@angular/forms';
 
@@ -14,15 +14,19 @@ import { Place } from '../../place.model';
 })
 export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
-  private placeSub: Subscription;
+  // private placeSub: Subscription;
+  placeId: string;
   form: FormGroup;
+  isLoading=false;
+  private placeSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
     private placesService: PlacesService,
     private navCtrl: NavController,
     private loadingCtrl: LoadingController,
-    private router: Router
+    private router: Router,
+    private alertCtrl: AlertController
   ) {}
   
 
@@ -32,6 +36,8 @@ export class EditOfferPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/places/tabs/offers');
         return;
       }
+      this.placeId=paramMap.get('placeId');
+      this.isLoading=true;
 
       // this.place = this.placesService.getPlace(paramMap.get('placeId'));
       // this.form=new FormGroup({
@@ -60,6 +66,14 @@ export class EditOfferPage implements OnInit, OnDestroy {
               validators: [Validators.required, Validators.maxLength(180)]
             })
           });
+          this.isLoading=false;
+        }, error =>{
+            this.alertCtrl.create({header:'An Error Occured!', message:'Place could not be fetch',buttons:[{text:'Okay', handler:()=>{
+              this.router.navigate(['/places/tabs/offers']);
+            }}]
+          }).then(alertEl =>{
+            alertEl.present();
+          })
         });
     });
   }
